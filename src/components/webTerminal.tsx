@@ -1,5 +1,5 @@
-import { Terminal } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
+import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import {XTerm} from "xterm-for-react"
 import "../../node_modules/xterm/css/xterm.css"
@@ -10,22 +10,26 @@ import {iTerminalOptions} from "../utils/terminalOptions"
 
 const WebTerminal: React.FC = () => {
     const xtermRef:any = useRef(null)
-    var fitAddon = new FitAddon()
+    let term:Terminal
+    let [command,setCommand]=useState<string>("")
     function sendData(str:String){
-        console.log(str)
+
+    }
+    function prompt(){
+        let shellprompt="noobtopro$ "
+        term.write("\r\n"+shellprompt)
+    }
+    function onKeyPress(event: { key: string; domEvent: KeyboardEvent }){
+        setCommand(command.concat(event.key))
     }
     useEffect(()=>{
-        xtermRef.current.terminal.write("noobtopro$")
-        xtermRef.current.terminal.cursorBlink=false
-        xtermRef.current.terminal._initialized=true
-        xtermRef.current.terminal.focus()
-        xtermRef.current.terminal.prompt=()=>{
-            xtermRef.current.terminal.write("\r\n$")
-        }
-    },[])
+        term=xtermRef.current.terminal
+        term.write(command)
+        prompt()
+    },[command])
     return (
         <div>
-            <XTerm ref={xtermRef} options={iTerminalOptions} onData={(str:String)=>sendData(str)} />
+            <XTerm ref={xtermRef} options={iTerminalOptions} onData={(str:String)=>sendData(str)} onKey={(key)=>onKeyPress(key)}/>
         </div>
     )
 }
