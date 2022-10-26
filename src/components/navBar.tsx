@@ -18,3 +18,5 @@ const NavBar = () => {
 }
 
 export default NavBar
+
+//yarn install --prefer-offline

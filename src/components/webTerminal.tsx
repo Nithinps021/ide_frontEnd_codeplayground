@@ -1,17 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Terminal } from "xterm";
-import { FitAddon } from "xterm-addon-fit";
-import {XTerm} from "xterm-for-react"
-import "../../node_modules/xterm/css/xterm.css"
+import "xterm/css/xterm.css"
 import {iTerminalOptions} from "../utils/terminalOptions"
-
-
-
 
 const WebTerminal: React.FC = () => {
     const xtermRef:any = useRef(null)
     let term:Terminal
-    let [command,setCommand]=useState<string>("")
     function sendData(str:String){
 
     }
@@ -19,17 +13,23 @@ const WebTerminal: React.FC = () => {
         let shellprompt="noobtopro$ "
         term.write("\r\n"+shellprompt)
     }
-    function onKeyPress(event: { key: string; domEvent: KeyboardEvent }){
-        setCommand(command.concat(event.key))
-    }
+
     useEffect(()=>{
-        term=xtermRef.current.terminal
-        term.write(command)
+        term=new Terminal(iTerminalOptions)
+        term.open(xtermRef.current)
+        term.onKey((event: { key: string; domEvent: KeyboardEvent })=>{
+            console.log(event.key)
+            if(event.domEvent.key==="Backspace"){
+                term.write("\b \b")
+            }
+            else{
+                term.write(event.domEvent.key)
+            }
+        })
         prompt()
-    },[command])
+    },[])
     return (
-        <div>
-            <XTerm ref={xtermRef} options={iTerminalOptions} onData={(str:String)=>sendData(str)} onKey={(key)=>onKeyPress(key)}/>
+        <div ref={xtermRef} style={{maxHeight:200,maxWidth:1000}}>
         </div>
     )
 }

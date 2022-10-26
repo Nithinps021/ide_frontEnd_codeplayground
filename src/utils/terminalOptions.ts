@@ -28,6 +28,7 @@ export const iTerminalOptions : ITerminalOptions = {
     cursorStyle:"bar",
     fontFamily:"Ubuntu Mono,monospace",
     theme:iTheme,
-    fontSize:18
+    fontSize:18,
+    windowsMode:false
 
 }

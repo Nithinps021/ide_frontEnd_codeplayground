@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ThemeProvider } from "@mui/material";
+import { Grid, ThemeProvider } from "@mui/material";
 import NavBar from "./components/navBar";
 import WebTerminal from "./components/webTerminal"
 import playgroundTheme from "./theme/playGroundTheme";
@@ -11,6 +11,9 @@ function App() {
        <ThemeProvider theme={playgroundTheme}>
             <div>
                 <NavBar />
+                <div style={{minHeight:500,width:100}}>
+
+                </div>
                 <WebTerminal/>
             </div>
         </ThemeProvider>
