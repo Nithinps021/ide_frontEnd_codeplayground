@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Terminal } from "xterm";
+import { Terminal as TerminalType } from "xterm";
+import{Terminal} from "xterm"
 import "xterm/css/xterm.css"
 import {iTerminalOptions} from "../utils/terminalOptions"
 
 const WebTerminal: React.FC = () => {
-    const xtermRef:any = useRef(null)
-    let term:Terminal
+    let term:TerminalType
     function sendData(str:String){
 
     }
@@ -13,10 +13,17 @@ const WebTerminal: React.FC = () => {
         let shellprompt="noobtopro$ "
         term.write("\r\n"+shellprompt)
     }
+    function realTerminal():void{
+        
 
+    }
     useEffect(()=>{
+        let terminalContainer = document.getElementById('terminal-container')
+        while(terminalContainer?.children.length){
+            terminalContainer.removeChild(terminalContainer.children[0])
+        }
         term=new Terminal(iTerminalOptions)
-        term.open(xtermRef.current)
+        if(terminalContainer) term.open(terminalContainer)
         term.onKey((event: { key: string; domEvent: KeyboardEvent })=>{
             console.log(event.key)
             if(event.domEvent.key==="Backspace"){
@@ -27,9 +34,10 @@ const WebTerminal: React.FC = () => {
             }
         })
         prompt()
+        if(terminalContainer) console.log(terminalContainer.children.length + "ch ild")
     },[])
     return (
-        <div ref={xtermRef} style={{maxHeight:200,maxWidth:1000}}>
+        <div id="terminal-container">
         </div>
     )
 }

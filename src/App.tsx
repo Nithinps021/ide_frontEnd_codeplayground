@@ -11,9 +11,6 @@ function App() {
        <ThemeProvider theme={playgroundTheme}>
             <div>
                 <NavBar />
-                <div style={{minHeight:500,width:100}}>
-
-                </div>
                 <WebTerminal/>
             </div>
         </ThemeProvider>
