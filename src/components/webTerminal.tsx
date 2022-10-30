@@ -1,40 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Terminal as TerminalType } from "xterm";
 import{Terminal} from "xterm"
+import { FitAddon } from "xterm-addon-fit"; 
 import "xterm/css/xterm.css"
 import {iTerminalOptions} from "../utils/terminalOptions"
+import { SerializeAddon } from "xterm-addon-serialize";
+import {AttachAddon} from "xterm-addon-attach"
 
 const WebTerminal: React.FC = () => {
     let term:TerminalType
-    function sendData(str:String){
-
-    }
+    let socketURL = 'ws://localhost:8080/term'
+    let websocket = new WebSocket(socketURL)
+    websocket.binaryType="arraybuffer"
+    
     function prompt(){
         let shellprompt="noobtopro$ "
         term.write("\r\n"+shellprompt)
     }
-    function realTerminal():void{
-        
-
-    }
     useEffect(()=>{
-        let terminalContainer = document.getElementById('terminal-container')
-        while(terminalContainer?.children.length){
-            terminalContainer.removeChild(terminalContainer.children[0])
+        if(websocket){
+            let terminalContainer = document.getElementById('terminal-container')
+            while(terminalContainer?.children.length){
+                terminalContainer.removeChild(terminalContainer.children[0])
+            }
+            term=new Terminal(iTerminalOptions)
+            const fitAddon = new FitAddon()
+            const serializeAddon =  new SerializeAddon()
+            term.loadAddon(fitAddon)
+            term.loadAddon(serializeAddon)
+            term.loadAddon(new AttachAddon(websocket))
+            if(terminalContainer) term.open(terminalContainer)
+            fitAddon.fit()
+            prompt()
         }
-        term=new Terminal(iTerminalOptions)
-        if(terminalContainer) term.open(terminalContainer)
-        term.onKey((event: { key: string; domEvent: KeyboardEvent })=>{
-            console.log(event.key)
-            if(event.domEvent.key==="Backspace"){
-                term.write("\b \b")
-            }
-            else{
-                term.write(event.domEvent.key)
-            }
-        })
-        prompt()
-        if(terminalContainer) console.log(terminalContainer.children.length + "ch ild")
     },[])
     return (
         <div id="terminal-container">
