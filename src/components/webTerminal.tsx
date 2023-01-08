@@ -6,10 +6,11 @@ import "xterm/css/xterm.css"
 import {iTerminalOptions} from "../utils/terminalOptions"
 import { SerializeAddon } from "xterm-addon-serialize";
 import {AttachAddon} from "xterm-addon-attach"
+import { error } from "console";
 
 const WebTerminal: React.FC = () => {
     let term:TerminalType
-    let socketURL = 'ws://localhost:8080/term'
+    let socketURL = 'ws://terminal-backend-noobtopro-t2n7bpl7va-el.a.run.app/term'
     let websocket = new WebSocket(socketURL)
     websocket.binaryType="arraybuffer"
     
